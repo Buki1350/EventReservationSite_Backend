@@ -13,7 +13,6 @@ internal static class UsersEndpoints
         group
             .MapEndpoint<SignUpEndpoint>()
             .MapEndpoint<SignInEndpoint>()
-            .MapEndpoint<GetMeEndpoint>()
-            .MapEndpoint<UpdateBanStatusEndpoint>();
+            .MapEndpoint<GetMeEndpoint>();
     }
 }

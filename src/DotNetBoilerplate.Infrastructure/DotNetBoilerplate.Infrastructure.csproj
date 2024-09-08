@@ -40,13 +40,5 @@
         <Folder Include="DAL\Migrations\"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <Content Update="Security\appsettings.Development.json">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </Content>
-    </ItemGroup>
-
 
 </Project>

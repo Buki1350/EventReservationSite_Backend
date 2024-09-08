@@ -23,7 +23,7 @@ namespace DotNetBoilerplate.Infrastructure.DAL.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("DotNetBoilerplate.Core.Users.User", b =>
+            modelBuilder.Entity("DotNetBoilerplate.Core.Entities.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -31,9 +31,6 @@ namespace DotNetBoilerplate.Infrastructure.DAL.Migrations
                     b.Property<string>("AccountType")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<DateTime?>("BannedAt")
-                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");

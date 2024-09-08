@@ -14,7 +14,6 @@ public class User : Entity
         Role = role;
         CreatedAt = createdAt;
         AccountType = accountType;
-        BannedAt = null;
     }
 
     private User()
@@ -28,7 +27,6 @@ public class User : Entity
     public Role Role { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public AccountType AccountType { get; private set; }
-    public DateTime? BannedAt { get; private set; }
 
     public void SetAccountType(AccountType accountType)
     {
@@ -43,15 +41,5 @@ public class User : Entity
     public static User NewAdmin(UserId id, Email email, Password password, DateTime createdAt)
     {
         return new User(id, email, "ADMIN", password, Role.Admin(), createdAt, AccountType.Extended());
-    }
-
-    public void UpdateIsBanned(bool shouldBeBanned, DateTime now)
-    {
-        if (shouldBeBanned && BannedAt is null)
-        {
-            BannedAt = now;
-            return;
-        }
-        if (!shouldBeBanned) BannedAt = null;
     }
 }
