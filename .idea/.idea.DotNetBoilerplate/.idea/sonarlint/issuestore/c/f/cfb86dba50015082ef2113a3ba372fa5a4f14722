@@ -1,3 +1,0 @@
-
-þcsharpsquid:S2259"³'(Task<TResult>)handlerType.GetMethod(nameof(IQueryHandler<IQuery<TResult>, TResult>.HandleAsync))?
-            .Invoke(handler, [query])' is null on at least one execution path.(¤ˆº»8°ÇÆéˆ2J$8d573a91-8f91-4b8c-bf23-8652423936d5
