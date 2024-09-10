@@ -1,4 +1,5 @@
-﻿using DotNetBoilerplate.Core.Users;
+﻿using DotNetBoilerplate.Core.Event;
+using DotNetBoilerplate.Core.Users;
 using DotNetBoilerplate.Infrastructure.DAL.Configurations.Write;
 using DotNetBoilerplate.Shared.Abstractions.Outbox;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +11,14 @@ internal sealed class DotNetBoilerplateWriteDbContext(DbContextOptions<DotNetBoi
 {
     public DbSet<User> Users { get; set; }
     public DbSet<OutboxMessage> OutboxMessages { get; set; }
+    public DbSet<Event> Events { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("dotNetBoilerplate");
 
         modelBuilder.ApplyConfiguration(new UserWriteConfiguration());
+        modelBuilder.ApplyConfiguration(new EventWriteConfiguration());
         modelBuilder.ApplyConfiguration(new OutboxMessageWriteConfiguration());
 
     }
