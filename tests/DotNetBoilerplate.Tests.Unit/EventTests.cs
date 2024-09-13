@@ -3,11 +3,26 @@ using DotNetBoilerplate.Shared.Abstractions.Domain;
 using DotNetBoilerplate.Shared.Abstractions.Exceptions;
 using Xunit;
 using System;
+using DotNetBoilerplate.Core.Reservations;
+using DotNetBoilerplate.Core.Users;
 
 namespace DotNetBoilerplate.Tests.Unit
 {
     public class EventTests
     {
+        Event MakeNewEvent(DateTime startTime, DateTime endTime, DateTime now, int maxNumberOfTickets = 100)
+        {
+            return Event.Create(
+                new EventOrganizerId(Guid.NewGuid()),
+                new EventTitle("Test Event"),
+                new EventDescription("This is a test event description."),
+                new EventStartDate(startTime, now),
+                new EventEndDate(endTime),
+                new EventLocation("Test Location"),
+                new EventMaxNumberOfTickets(maxNumberOfTickets)
+            );
+        }
+        
         [Fact]
         public void Create_ShouldReturnEvent_WhenValidDataIsProvided()
         {
@@ -93,6 +108,59 @@ namespace DotNetBoilerplate.Tests.Unit
             
             Assert.Equal("The event location is null or empty.", exception_null.Message);
             Assert.Equal("The event location is null or empty.", exception_empty.Message);
+        }
+
+        [Fact]
+        public void MakeReservation_ShouldThrowTooLateReservationException_WhenGivenDateIsLaterThanStartDate()
+        {
+            // Arrange
+            var startDate = DateTime.Now.AddDays(-1);
+            var endDate = DateTime.Now.AddDays(1);
+            var now = DateTime.Now.AddDays(-2);
+            var @event = MakeNewEvent(startDate, endDate, now);
+
+            // Act & Assert
+            var exception = Assert.Throws<TooLateReservationTimeException>(() =>
+                @event.MakeReservation(new UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now));
+
+            Assert.Equal("Reservation cannot be done after event started.", exception.Message);
+        }
+
+        [Fact]
+        public void MakeReservation_ShouldThrowInvalidNumberOfReservationsException_WhenReservationsAreFull()
+        {
+            // Arrange
+            var startDate = DateTime.Now.AddDays(1);
+            var endDate = DateTime.Now.AddDays(2);
+            var now = DateTime.Now;
+            const int maxNumberOfReservations = 2;
+            var @event = MakeNewEvent(startDate, endDate, now, maxNumberOfReservations);
+
+            @event.MakeReservation(new UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now);
+            @event.MakeReservation(new UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now);
+
+            // Act & Assert
+            var exception = Assert.Throws<InvalidNumberOfReservationsException>(() =>
+                @event.MakeReservation(new UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now));
+
+            Assert.Equal($"Too many reservations - cannot be more than {maxNumberOfReservations}.", exception.Message);
+        }
+
+        [Fact]
+        public void CancelReservation_ShouldThrowReservationNotFoundException_WhenReservationIsNotFound()
+        {
+            // Arrange
+            var startDate = DateTime.Now.AddDays(1);
+            var endDate = DateTime.Now.AddDays(2);
+            var now = DateTime.Now;
+            var @event = MakeNewEvent(startDate, endDate, now);
+            var nonExistentReservationId = new ReservationId(Guid.NewGuid());
+
+            // Act & Assert
+            var exception = Assert.Throws<ReservationNotFoundException>(() =>
+                @event.CancelReservation(nonExistentReservationId));
+
+            Assert.Equal($"The reservation with the given address {nonExistentReservationId.Value} was not found.", exception.Message);
         }
     }
 }

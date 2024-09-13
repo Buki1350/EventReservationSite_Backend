@@ -1,6 +1,6 @@
 ﻿using DotNetBoilerplate.Core.CommonExceptions;
 
-namespace DotNetBoilerplate.Core;
+namespace DotNetBoilerplate.Core.Events;
 
 public sealed record EventId
 {

@@ -6,8 +6,8 @@ public sealed record ReservationPaid
     {
         Value = value;
     }
-    
-    public bool Value { get; init; }
+
+    public bool Value { get; init; } = false;
     public static implicit operator bool(ReservationPaid value) => value.Value;
     public static implicit operator ReservationPaid(bool value) => new ReservationPaid(value);
     
