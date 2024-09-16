@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using DotNetBoilerplate.Shared.Commands;
 using DotNetBoilerplate.Shared.Events;
+using DotNetBoilerplate.Shared.Queries;
 using Microsoft.Extensions.DependencyInjection;
 
 [assembly: InternalsVisibleTo("DotNetBoilerplate.Tests.Unit")]
@@ -14,6 +15,7 @@ public static class Extensions
         services.AddCommands();
         services.AddDomainEventHandlers();
         services.AddDomainNotificationHandlers();
+        services.AddQueries();
 
         return services;
     }

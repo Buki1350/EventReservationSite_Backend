@@ -5,9 +5,9 @@ namespace DotNetBoilerplate.Core.Events;
 public class InvalidMaxNumberOfTicketsException(int value)
     : CustomException($"Incorrect maximum number of tickets: {value}");
 
-public sealed record EventMaxNumberOfTickets
+public sealed record EventMaxNumberOfReservations
 {
-    public EventMaxNumberOfTickets(int value)
+    public EventMaxNumberOfReservations(int value)
     {
         if (value <= 0) throw new InvalidMaxNumberOfTicketsException(value);
 
@@ -15,6 +15,6 @@ public sealed record EventMaxNumberOfTickets
     }
     
     public int Value { get; }
-    public static implicit operator int(EventMaxNumberOfTickets value) => value.Value;
-    public static implicit operator EventMaxNumberOfTickets(int value) => new(value);
+    public static implicit operator int(EventMaxNumberOfReservations value) => value.Value;
+    public static implicit operator EventMaxNumberOfReservations(int value) => new(value);
 }
