@@ -13,13 +13,14 @@ namespace DotNetBoilerplate.Tests.Unit
         Event MakeNewEvent(DateTime startTime, DateTime endTime, DateTime now, int maxNumberOfTickets = 100)
         {
             return Event.Create(
+                new EventId(Guid.NewGuid()),
                 new EventOrganizerId(Guid.NewGuid()),
                 new EventTitle("Test Event"),
                 new EventDescription("This is a test event description."),
                 new EventStartDate(startTime, now),
                 new EventEndDate(endTime),
                 new EventLocation("Test Location"),
-                new EventMaxNumberOfTickets(maxNumberOfTickets)
+                new EventMaxNumberOfReservations(maxNumberOfTickets)
             );
         }
         
@@ -27,16 +28,17 @@ namespace DotNetBoilerplate.Tests.Unit
         public void Create_ShouldReturnEvent_WhenValidDataIsProvided()
         {
             // Arrange
+            var eventId = new EventId(Guid.NewGuid());
             var organizerId = new EventOrganizerId(Guid.NewGuid());
             var title = new EventTitle("Test Event");
             var description = new EventDescription("This is a test event description.");
             var startDate = new EventStartDate(DateTime.Now.AddDays(1), DateTime.Now);
             var endDate = new EventEndDate(DateTime.Now.AddDays(2));
             var location = new EventLocation("Test Location");
-            var maxNumberOfTickets = new EventMaxNumberOfTickets(100);
+            var maxNumberOfTickets = new EventMaxNumberOfReservations(100);
 
             // Act
-            var @event = Event.Create(organizerId, title, description, startDate, endDate, location, maxNumberOfTickets);
+            var @event = Event.Create(eventId, organizerId, title, description, startDate, endDate, location, maxNumberOfTickets);
 
             // Assert
             Assert.NotNull(@event);
@@ -46,24 +48,25 @@ namespace DotNetBoilerplate.Tests.Unit
             Assert.Equal(startDate, @event.StartDate);
             Assert.Equal(endDate, @event.EndDate);
             Assert.Equal(location, @event.Location);
-            Assert.Equal(maxNumberOfTickets, @event.MaxNumberOfTickets);
+            Assert.Equal(maxNumberOfTickets, @event.MaxNumberOfReservations);
         }
 
         [Fact]
         public void Create_ShouldThrowInvalidEndDateException_WhenEndDateIsEarlierThanStartDate()
         {
             // Arrange
+            var eventId = new EventId(Guid.NewGuid());
             var organizerId = new EventOrganizerId(Guid.NewGuid());
             var title = new EventTitle("Test Event");
             var description = new EventDescription("This is a test event description.");
             var startDate = new EventStartDate(DateTime.Now.AddDays(2), DateTime.Now);
             var endDate = new EventEndDate(DateTime.Now.AddDays(1));
             var location = new EventLocation("Test Location");
-            var maxNumberOfTickets = new EventMaxNumberOfTickets(100);
+            var maxNumberOfTickets = new EventMaxNumberOfReservations(100);
 
             // Act & Assert
             var exception = Assert.Throws<InvalidEndDateException>(() => 
-                Event.Create(organizerId, title, description, startDate, endDate, location, maxNumberOfTickets));
+                Event.Create(eventId, organizerId, title, description, startDate, endDate, location, maxNumberOfTickets));
 
             Assert.Equal($"End date ({endDate.Value}) cannot be earlier than start date({startDate.Value}).", exception.Message);
         }
@@ -86,10 +89,10 @@ namespace DotNetBoilerplate.Tests.Unit
         {      
             // Arrange & Act & Assert
             var exceptionZero = Assert.Throws<InvalidMaxNumberOfTicketsException>(() =>
-                new EventMaxNumberOfTickets(0));
+                new EventMaxNumberOfReservations(0));
             
             var exceptionLessThanZero = Assert.Throws<InvalidMaxNumberOfTicketsException>(() =>
-                new EventMaxNumberOfTickets(-1));
+                new EventMaxNumberOfReservations(-1));
             
             Assert.Equal("Incorrect maximum number of tickets: 0", exceptionZero.Message);
             Assert.Equal("Incorrect maximum number of tickets: -1", exceptionLessThanZero.Message);

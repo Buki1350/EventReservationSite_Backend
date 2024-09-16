@@ -16,60 +16,69 @@ public class Event : Entity
     private Event(){}
 
     public static Event Create(
+        EventId eventId,
         EventOrganizerId organizerId,
         EventTitle title,
         EventDescription description,
         EventStartDate startDate,
         EventEndDate endDate,
         EventLocation location,
-        EventMaxNumberOfTickets maxNumberOfTickets)
+        EventMaxNumberOfReservations maxNumberOfReservations)
     {
         if (endDate is null) endDate = new EventEndDate(startDate.Value);
         else if (endDate.Value < startDate.Value) throw new InvalidEndDateException(startDate.Value, endDate.Value);
         
         var @event = new Event()
         {
-            Id = Guid.NewGuid(),
+            Id = eventId,
             OrganizerId = organizerId,
             Title = title,
             Description = description,
             StartDate = startDate,
             EndDate = endDate,
             Location = location,
-            MaxNumberOfTickets = maxNumberOfTickets
+            MaxNumberOfReservations = maxNumberOfReservations
         };
             
         return @event;
     }
     
-    public Guid Id { get; private set; }
+    public EventId Id { get; private set; }
     public EventOrganizerId OrganizerId { get; private set; }
     public EventTitle Title { get; private set; }
     public EventDescription Description { get; private set; }
     public EventStartDate StartDate { get; private set; }
     public EventEndDate EndDate { get; private set; }
     public EventLocation Location { get; private set; }
-    public EventMaxNumberOfTickets MaxNumberOfTickets { get; private set; }
+    public EventMaxNumberOfReservations MaxNumberOfReservations { get; private set; }
     public readonly List<Reservation> Reservations = [];
 
-    public void Update(Event @event)
+    public void Update(
+        EventTitle newTitle,
+        EventDescription newDescription,
+        EventStartDate newStartDate,
+        EventEndDate newEndDate,
+        EventLocation newLocation,
+        EventMaxNumberOfReservations newMaxNumberOfReservations
+        )
     {
-        Description = @event.Description;
-        StartDate = @event.StartDate;
-        EndDate = @event.EndDate;
-        Location = @event.Location;
-        MaxNumberOfTickets = @event.MaxNumberOfTickets;
+        Title = newTitle;
+        Description = newDescription;
+        StartDate = newStartDate;
+        EndDate = newEndDate;
+        Location = newLocation;
+        MaxNumberOfReservations = newMaxNumberOfReservations;
     }
     
-    public void MakeReservation(UserId userId, EventId eventId, DateTime now) //unity
+    public void MakeReservation(UserId userId, EventId eventId, DateTime now)
     {
         if (now > StartDate.Value) throw new TooLateReservationTimeException();
-        if (Reservations.Count + 1 > MaxNumberOfTickets) throw new InvalidNumberOfReservationsException(MaxNumberOfTickets.Value);
+        if (Reservations.Count + 1 > MaxNumberOfReservations) throw new InvalidNumberOfReservationsException(MaxNumberOfReservations.Value);
         
         Reservations.Add(Reservation.Create(userId, eventId, now));
     }
 
-    public void CancelReservation(ReservationId reservationId) //unity
+    public void CancelReservation(ReservationId reservationId)
     {
         var reservation = Reservations.FirstOrDefault(r => r.Id == reservationId);
         

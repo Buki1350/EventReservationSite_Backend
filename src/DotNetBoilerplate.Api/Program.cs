@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
+using DotNetBoilerplate.Api.Events;
 using DotNetBoilerplate.Api.Users;
 using DotNetBoilerplate.Application;
+using DotNetBoilerplate.Application.Events;
 using DotNetBoilerplate.Core;
 using DotNetBoilerplate.Infrastructure;
 using DotNetBoilerplate.Shared;
@@ -18,6 +20,7 @@ builder.Services
 var app = builder.Build();
 
 app.MapUsersEndpoints();
+app.MapEventsEndpoints();
 
 app.UseInfrastructure();
 
