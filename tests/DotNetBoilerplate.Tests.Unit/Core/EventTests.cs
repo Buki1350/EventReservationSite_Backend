@@ -2,6 +2,7 @@
 using DotNetBoilerplate.Core.Reservations;
 using DotNetBoilerplate.Core.Users;
 using Xunit;
+using UserId = DotNetBoilerplate.Core.Events.UserId;
 
 namespace DotNetBoilerplate.Tests.Unit.Core
 {
@@ -11,7 +12,7 @@ namespace DotNetBoilerplate.Tests.Unit.Core
         {
             return Event.Create(
                 new EventId(Guid.NewGuid()),
-                new EventOrganizerId(Guid.NewGuid()),
+                new UserId(Guid.NewGuid()),
                 new EventTitle("Test Event"),
                 new EventDescription("This is a test event description."),
                 new EventStartDate(startTime, now),
@@ -26,7 +27,7 @@ namespace DotNetBoilerplate.Tests.Unit.Core
         {
             // Arrange
             var eventId = new EventId(Guid.NewGuid());
-            var organizerId = new EventOrganizerId(Guid.NewGuid());
+            var organizerId = new UserId(Guid.NewGuid());
             var title = new EventTitle("Test Event");
             var description = new EventDescription("This is a test event description.");
             var startDate = new EventStartDate(DateTime.Now.AddDays(1), DateTime.Now);
@@ -53,7 +54,7 @@ namespace DotNetBoilerplate.Tests.Unit.Core
         {
             // Arrange
             var eventId = new EventId(Guid.NewGuid());
-            var organizerId = new EventOrganizerId(Guid.NewGuid());
+            var organizerId = new UserId(Guid.NewGuid());
             var title = new EventTitle("Test Event");
             var description = new EventDescription("This is a test event description.");
             var startDate = new EventStartDate(DateTime.Now.AddDays(2), DateTime.Now);
@@ -121,7 +122,7 @@ namespace DotNetBoilerplate.Tests.Unit.Core
 
             // Act & Assert
             var exception = Assert.Throws<TooLateReservationTimeException>(() =>
-                @event.MakeReservation(new UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now));
+                @event.MakeReservation(new DotNetBoilerplate.Core.Users.UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now));
 
             Assert.Equal("Reservation cannot be done after event started.", exception.Message);
         }
@@ -136,12 +137,12 @@ namespace DotNetBoilerplate.Tests.Unit.Core
             const int maxNumberOfReservations = 2;
             var @event = MakeNewEvent(startDate, endDate, now, maxNumberOfReservations);
 
-            @event.MakeReservation(new UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now);
-            @event.MakeReservation(new UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now);
+            @event.MakeReservation(new DotNetBoilerplate.Core.Users.UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now);
+            @event.MakeReservation(new DotNetBoilerplate.Core.Users.UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now);
 
             // Act & Assert
             var exception = Assert.Throws<InvalidNumberOfReservationsException>(() =>
-                @event.MakeReservation(new UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now));
+                @event.MakeReservation(new DotNetBoilerplate.Core.Users.UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now));
 
             Assert.Equal($"Too many reservations - cannot be more than {maxNumberOfReservations}.", exception.Message);
         }

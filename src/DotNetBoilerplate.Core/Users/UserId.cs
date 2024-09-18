@@ -10,7 +10,8 @@ public sealed record UserId
  
         Value = value;
     }
-
+    
+    
     public Guid Value { get; }
 
     public static implicit operator Guid(UserId value)

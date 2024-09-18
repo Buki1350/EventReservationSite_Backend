@@ -7,6 +7,7 @@ public class InvalidMaxNumberOfTicketsException(int value)
 
 public sealed record EventMaxNumberOfReservations
 {
+    public EventMaxNumberOfReservations() {}
     public EventMaxNumberOfReservations(int value)
     {
         if (value <= 0) throw new InvalidMaxNumberOfTicketsException(value);
