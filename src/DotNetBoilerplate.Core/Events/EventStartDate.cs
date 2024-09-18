@@ -16,5 +16,4 @@ public sealed record EventStartDate
     public static int EventSpareTime { get; } = 12;
     public DateTime Value { get; init; }
     public static implicit operator DateTime(EventStartDate value) => value.Value;
-    //public static implicit operator EventStartDate(DateTime value) => new EventStartDate(value);
 }
