@@ -65,4 +65,37 @@ public class EventTests
         // Act & Assert
         await Assert.ThrowsAsync<WrongUserIdentityException>(() => _updateEventHandler.HandleAsync(command));
     }
+    
+    [Fact]
+    public async Task Handle_Should_UpdateEvent_When_DataIsValid()
+    {
+        // Arrange
+        var organizerId = Guid.NewGuid();
+        var eventId = new EventId(Guid.NewGuid());
+        var now = DateTime.UtcNow;
+        var startDate = now.AddDays(1);
+        var endDate = now.AddDays(2);
+
+        var command = new UpdateEventCommand(eventId, "Updated Title", "Updated Description", startDate, endDate, "Updated Location", 20);
+
+        var existingEvent = Event.Create(eventId, organizerId, "Original Title", "Original Description", new EventStartDate(now.AddDays(3), _clock.Now()), now.AddDays(4), "Original Location", 10);
+
+        _eventRepository.FindByIdAsync(eventId).Returns(Task.FromResult(existingEvent));
+        _context.Identity.Id.Returns(organizerId);
+        _clock.Now().Returns(now);
+
+        // Act
+        await _updateEventHandler.HandleAsync(command);
+
+        // Assert
+        await _eventRepository.Received(1).UpdateAsync(Arg.Is<Event>(e => 
+            e.Id == eventId &&
+            e.Title == "Updated Title" &&
+            e.Description == "Updated Description" &&
+            e.StartDate.Value == startDate &&
+            e.EndDate.Value == endDate &&
+            e.Location == "Updated Location" &&
+            e.MaxNumberOfReservations == 20
+        ));
+    }
 }

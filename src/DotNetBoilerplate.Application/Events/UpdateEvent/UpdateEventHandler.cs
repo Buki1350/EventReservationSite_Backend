@@ -6,7 +6,6 @@ using DotNetBoilerplate.Shared.Abstractions.Time;
 
 namespace DotNetBoilerplate.Application.Events.UpdateEvent;
 
-public class InvalidMaxNumberOfReservations() : CustomException("Max number of reservations cannot be less than zero or null.");
 public class EventNotFoundException() : CustomException("Event id does not match with existing events id.");
 public class WrongUserIdentityException() : CustomException("User want to change event that is not his");
 internal sealed class UpdateEventHandler : ICommandHandler<UpdateEventCommand>
@@ -30,7 +29,6 @@ internal sealed class UpdateEventHandler : ICommandHandler<UpdateEventCommand>
         
         var @event = _eventRepository.FindByIdAsync(command.Id).Result;
         
-        if (newMaxNumberOfReservations is null || newMaxNumberOfReservations < 1) throw new InvalidMaxNumberOfReservations();
         if (@event is null) throw new EventNotFoundException();
         if (_context.Identity.Id != @event.OrganizerId.Value) throw new WrongUserIdentityException();
         
