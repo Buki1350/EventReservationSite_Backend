@@ -3,7 +3,6 @@ using DotNetBoilerplate.Core.Reservations;
 using DotNetBoilerplate.Core.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using UserId = DotNetBoilerplate.Core.Events.UserId;
 
 namespace DotNetBoilerplate.Infrastructure.DAL.Configurations.Write;
 
@@ -45,7 +44,7 @@ internal sealed class EventWriteConfiguration : IEntityTypeConfiguration<Event>
             reservationBuilder.Property(x => x.EventId)
                 .HasConversion(x => x.Value, x => new EventId(x));
             reservationBuilder.Property(x => x.UserId)
-                .HasConversion(x => x.Value, x => new Core.Users.UserId(x));
+                .HasConversion(x => x.Value, x => new UserId(x));
             reservationBuilder.Property(x => x.CreatedAt);
             reservationBuilder.Property(x => x.Paid)
                 .HasConversion(x => x.Value, x => new ReservationPaid(x));

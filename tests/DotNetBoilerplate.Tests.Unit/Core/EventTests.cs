@@ -2,7 +2,6 @@
 using DotNetBoilerplate.Core.Reservations;
 using DotNetBoilerplate.Core.Users;
 using Xunit;
-using UserId = DotNetBoilerplate.Core.Events.UserId;
 
 namespace DotNetBoilerplate.Tests.Unit.Core
 {
