@@ -1,12 +1,9 @@
 ﻿using DotNetBoilerplate.Core.Events;
-using DotNetBoilerplate.Shared.Abstractions.Domain;
-using DotNetBoilerplate.Shared.Abstractions.Exceptions;
-using Xunit;
-using System;
 using DotNetBoilerplate.Core.Reservations;
 using DotNetBoilerplate.Core.Users;
+using Xunit;
 
-namespace DotNetBoilerplate.Tests.Unit
+namespace DotNetBoilerplate.Tests.Unit.Core
 {
     public class EventTests
     {
@@ -166,4 +163,6 @@ namespace DotNetBoilerplate.Tests.Unit
             Assert.Equal($"The reservation with the given address {nonExistentReservationId.Value} was not found.", exception.Message);
         }
     }
+    
+    
 }
