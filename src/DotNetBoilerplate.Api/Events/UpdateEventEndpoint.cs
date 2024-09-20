@@ -38,7 +38,7 @@ public class UpdateEventEndpoint : IEndpoint
 
     internal sealed class Response(Guid id);
 
-    private sealed class Request
+    public sealed class Request
     {
         [Required] public Guid Id { get; init; }
         public string NewTitle { get; init; }

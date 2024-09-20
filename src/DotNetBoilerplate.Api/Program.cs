@@ -25,3 +25,7 @@ app.MapEventsEndpoints();
 app.UseInfrastructure();
 
 await app.RunAsync();
+
+partial class Program
+{
+}
