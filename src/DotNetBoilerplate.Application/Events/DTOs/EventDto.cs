@@ -9,6 +9,8 @@ public record EventDto
         Id = @event.Id;
         Title = @event.Title;
     }
+    
+    public EventDto() { }
 
     public Guid Id { get; init; }
     public string Title { get; init; }

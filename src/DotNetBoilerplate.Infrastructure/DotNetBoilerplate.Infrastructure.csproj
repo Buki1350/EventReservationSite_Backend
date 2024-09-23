@@ -38,6 +38,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Folder Include="DAL\Handlers\Events\" />
         <Folder Include="DAL\Migrations\"/>
     </ItemGroup>
 

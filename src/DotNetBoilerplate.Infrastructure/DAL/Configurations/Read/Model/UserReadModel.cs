@@ -3,6 +3,8 @@
 internal sealed class UserReadModel
 {
     public Guid Id { get; set; }
+    
+    public List<EventReadModel> OrganizedEvents { get; set; }
     public string Username { get; set; }
     public string Email { get; set; }
     public string Role { get; set; }
