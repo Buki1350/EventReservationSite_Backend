@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using DotNetBoilerplate.Api.Events;
 using DotNetBoilerplate.Api.Users;
 using DotNetBoilerplate.Application.Events.CreateEvent;
+using DotNetBoilerplate.Application.Events.Responses;
 using DotNetBoilerplate.Tests.Integration.setup;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Shouldly;
@@ -148,5 +149,41 @@ public class EventEndpointsTests(BoilerplateEndpointsTestsFixture testsFixture) 
         
         //Assert
         getEventsResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+    }
+    
+    [Fact]
+    public async Task GivenEventExists_AndUserIsAuthorized_GetEventById_ShouldReturnEvent()
+    {
+        //Arrange
+        testsFixture.Client.DefaultRequestHeaders.Authorization =
+            await GetAuthenticationHeaderFromNewUserAsync();
+        
+        
+        var createEventRequest = new CreateEventEndpoint.Request
+        {
+            Title = "Test Event",
+            Description = "This is a test event",
+            StartDate = DateTime.Now.AddDays(1),
+            EndDate = DateTime.Now.AddDays(3),
+            Location = "Test Location",
+            MaxNumberOfReservations = 50
+        };
+
+        var createEventResponse = await testsFixture.Client.PostAsJsonAsync("events/", createEventRequest);
+        var createEventResult = await createEventResponse.Content.ReadFromJsonAsync<CreateEventEndpoint.Response>();
+
+        var eventId = createEventResult.Id;
+
+        //Act
+        var getEventByIdResponse = await testsFixture.Client.GetAsync($"events/{eventId}");
+        
+        //Assert
+        getEventByIdResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+        
+        var eventInfoResponse = await getEventByIdResponse.Content.ReadFromJsonAsync<EventInfoResponse>();
+        
+        eventInfoResponse.ShouldNotBeNull();
+        eventInfoResponse.Title.ShouldBe(createEventRequest.Title);
+        eventInfoResponse.Description.ShouldBe(createEventRequest.Description);
     }
 }

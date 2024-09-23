@@ -1,14 +1,11 @@
-﻿using DotNetBoilerplate.Application.Events.DTOs;
-using DotNetBoilerplate.Core.Events;
+﻿namespace DotNetBoilerplate.Application.Events.Responses;
 
-namespace DotNetBoilerplate.Application.Events.Responses;
-
-public class EventsInfoResponse
+public class EventInfoResponse
 {
-    public EventsInfoResponse(List<EventDto> events)
+    public EventInfoResponse()
     {
-        Events = events;
     }
 
-    public List<EventDto> Events { get; set; }
+    public string Title { get; set; } = "";
+    public string Description { get; set; } = "";
 }

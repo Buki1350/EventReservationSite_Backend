@@ -3,7 +3,7 @@ namespace DotNetBoilerplate.Infrastructure.DAL.Configurations.Read.Model;
 
 internal sealed class EventReadModel
 {
-    public Guid EventId { get; set; }
+    public Guid Id { get; set; }
     public Guid OrganizerId { get; set; }
     public UserReadModel Organizer { get; set; }
     public string Title { get; set; }

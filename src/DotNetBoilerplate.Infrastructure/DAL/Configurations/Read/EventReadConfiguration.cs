@@ -9,7 +9,7 @@ internal sealed class EventReadConfiguration : IEntityTypeConfiguration<EventRea
 {
     public void Configure(EntityTypeBuilder<EventReadModel> builder)
     {
-        builder.HasKey(x => x.EventId);
+        builder.HasKey(x => x.Id);
         builder.ToTable("Events");
 
         builder.HasOne(x => x.Organizer)
