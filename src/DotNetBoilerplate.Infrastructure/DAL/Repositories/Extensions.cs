@@ -9,7 +9,7 @@ internal static class Extensions
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IUserRepository, PostgresUserRepository>();
-        services.AddSingleton<IEventRepository, InMemoryEventRepository>();
+        services.AddScoped<IEventRepository, PostgresEventRepository>();
         
         return services;
     }

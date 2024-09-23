@@ -35,11 +35,11 @@ internal sealed class SignInEndpoint : IEndpoint
         return TypedResults.Ok(new Response(token.AccessToken));
     }
 
-    private sealed record Response(
+    public sealed record Response(
         string Token
     );
 
-    private sealed class Request
+    public sealed class Request
     {
         [Required] public string Email { get; init; }
         [Required] public string Password { get; init; }

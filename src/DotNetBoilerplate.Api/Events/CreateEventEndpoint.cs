@@ -10,7 +10,8 @@ public class CreateEventEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
     {
-        app.MapPost("createEvent", Handle)
+        app.MapPost("/", Handle)
+            .RequireAuthorization()
             .WithSummary("Creates a new event");
     }
 
@@ -32,12 +33,12 @@ public class CreateEventEndpoint : IEndpoint
         
         await commandDispatcher.DispatchAsync(command, ct);
 
-        return TypedResults.Ok(new Response(command.Id, command.Title, command.StartDate));
+        return TypedResults.Ok(new Response(command.Id));
     }
 
 
-    internal sealed record Response(Guid Id, string Title, DateTime StartDate);
-    private sealed class Request
+    internal sealed record Response(Guid Id);
+    public sealed class Request
     {
         [Required] public string Title { get; init; }
         [Required] public string Description { get; init; }

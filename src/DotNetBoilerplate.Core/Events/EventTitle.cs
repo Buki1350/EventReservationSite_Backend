@@ -6,6 +6,7 @@ public class InvalidEventTitleException() : CustomException("The event title can
 
 public sealed record EventTitle
 {
+    public EventTitle(){}
     public EventTitle(string value)
     {
         if (string.IsNullOrEmpty(value)) throw new InvalidEventTitleException();
@@ -13,7 +14,6 @@ public sealed record EventTitle
         Value = value;
     }
     
-    public EventTitle(){}
     public string Value { get; init; }
     public static implicit operator string(EventTitle value) => value.Value;
     public static implicit operator EventTitle(string value) => new EventTitle(value);

@@ -10,18 +10,19 @@ public class UpdateEventEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
     {
-        app.MapPost("updateEvent", Handle)
+        app.MapPut("{eventId:guid}", Handle)
             .WithSummary("Update event");
     }
 
     private static async Task<Ok<Response>> Handle(
         [FromBody] Request request,
+        [FromRoute] Guid eventId,
         [FromServices] ICommandDispatcher commandDispatcher,
         CancellationToken ct
         )
     {
         var command = new UpdateEventCommand(
-            request.Id,
+            eventId,
             request.NewTitle,
             request.NewDescription,
             request.NewStartDate,
@@ -38,9 +39,8 @@ public class UpdateEventEndpoint : IEndpoint
 
     internal sealed class Response(Guid id);
 
-    private sealed class Request
+    public sealed class Request
     {
-        [Required] public Guid Id { get; init; }
         public string NewTitle { get; init; }
         public string NewDescription { get; init; }
         public DateTime NewStartDate { get; init; }

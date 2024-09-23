@@ -5,6 +5,7 @@ namespace DotNetBoilerplate.Core.Events;
 public class InvalidEventStartDateException(DateTime value) : CustomException($"Incorrect event starting date ({value}). Date has to be at least {EventStartDate.EventSpareTime} hours in advance.");
 public sealed record EventStartDate
 {
+    public EventStartDate() {}
     public EventStartDate(DateTime value, DateTime now)
     {
         // start at least 12 hours in advance

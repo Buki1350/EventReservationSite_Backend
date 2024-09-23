@@ -34,11 +34,11 @@ internal sealed class SignUpEndpoint : IEndpoint
         return TypedResults.Ok(new Response(command.UserId));
     }
 
-    internal sealed record Response(
+    public sealed record Response(
         Guid Id
     );
 
-    private sealed class Request
+    public sealed class Request
     {
         [Required] public string Email { get; init; }
 

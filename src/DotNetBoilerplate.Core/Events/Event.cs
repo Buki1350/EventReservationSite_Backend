@@ -17,7 +17,7 @@ public class Event : Entity
 
     public static Event Create(
         EventId eventId,
-        EventOrganizerId organizerId,
+        UserId organizerId,
         EventTitle title,
         EventDescription description,
         EventStartDate startDate,
@@ -44,7 +44,7 @@ public class Event : Entity
     }
     
     public EventId Id { get; private set; }
-    public EventOrganizerId OrganizerId { get; private set; }
+    public UserId OrganizerId { get; private set; }
     public EventTitle Title { get; private set; }
     public EventDescription Description { get; private set; }
     public EventStartDate StartDate { get; private set; }
@@ -70,7 +70,7 @@ public class Event : Entity
         MaxNumberOfReservations = newMaxNumberOfReservations;
     }
     
-    public void MakeReservation(UserId userId, EventId eventId, DateTime now)
+    public void MakeReservation(Users.UserId userId, EventId eventId, DateTime now)
     {
         if (now > StartDate.Value) throw new TooLateReservationTimeException();
         if (Reservations.Count + 1 > MaxNumberOfReservations) throw new InvalidNumberOfReservationsException(MaxNumberOfReservations.Value);
