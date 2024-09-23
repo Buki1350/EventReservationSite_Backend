@@ -24,10 +24,8 @@ public class EventEndpointsTests(BoilerplateEndpointsTestsFixture testsFixture) 
         await testsFixture.ResetDbChangesAsync();
     }
 
-    [Fact]
-    public async Task GivenEventDataIsCorrect_AndUserIsAuthorized_EventCreateShouldSucceed()
+    private async Task<AuthenticationHeaderValue> GetAuthenticationHeaderFromNewUserAsync()
     {
-        //Arrange
         var signUpRequest = new SignUpEndpoint.Request
         {
             Email = "email@t.pl",
@@ -45,9 +43,15 @@ public class EventEndpointsTests(BoilerplateEndpointsTestsFixture testsFixture) 
         
         var signInResponse = await testsFixture.Client.PostAsJsonAsync("users/sign-in", signInRequest);
         var signInResult = await signInResponse.Content.ReadFromJsonAsync<SignInEndpoint.Response>();
+        return new AuthenticationHeaderValue("Bearer", signInResult.Token);
+    }
 
-        testsFixture.Client.DefaultRequestHeaders.Authorization = 
-            new AuthenticationHeaderValue("Bearer", signInResult.Token);
+    [Fact]
+    public async Task GivenEventDataIsCorrect_AndUserIsAuthorized_EventCreateShouldSucceed()
+    {
+        //Arrange
+        testsFixture.Client.DefaultRequestHeaders.Authorization =
+            await GetAuthenticationHeaderFromNewUserAsync();
         
         var createEventRequest = new CreateEventEndpoint.Request
         {
@@ -60,7 +64,7 @@ public class EventEndpointsTests(BoilerplateEndpointsTestsFixture testsFixture) 
         };
         
         //Act
-        var createEventResponse = await testsFixture.Client.PostAsJsonAsync("events/createEvent", createEventRequest);
+        var createEventResponse = await testsFixture.Client.PostAsJsonAsync("events/events", createEventRequest);
         
         //Assert
         createEventResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -71,26 +75,8 @@ public class EventEndpointsTests(BoilerplateEndpointsTestsFixture testsFixture) 
     public async Task GivenEventDataIsCorrect_AndUserIsAuthorized_EventUpdateShouldSucceed()
     {
         //Arrange
-        var signUpRequest = new SignUpEndpoint.Request
-        {
-            Email = "email@t.pl",
-            Password = "12345678",
-            Username = "username"
-        };
-        
-        await testsFixture.Client.PostAsJsonAsync("users/sign-up", signUpRequest);
-        
-        var signInRequest = new SignInEndpoint.Request
-        {
-            Email = "email@t.pl",
-            Password = "12345678"
-        };
-        
-        var signInResponse = await testsFixture.Client.PostAsJsonAsync("users/sign-in", signInRequest);
-        var signInResult = await signInResponse.Content.ReadFromJsonAsync<SignInEndpoint.Response>();
-
-        testsFixture.Client.DefaultRequestHeaders.Authorization = 
-            new AuthenticationHeaderValue("Bearer", signInResult.Token);
+        testsFixture.Client.DefaultRequestHeaders.Authorization =
+            await GetAuthenticationHeaderFromNewUserAsync();
         
         var createEventRequest = new CreateEventEndpoint.Request
         {
@@ -99,17 +85,17 @@ public class EventEndpointsTests(BoilerplateEndpointsTestsFixture testsFixture) 
             StartDate = DateTime.Now.AddDays(1),
             EndDate = DateTime.Now.AddDays(3),
             Location = "EventLocation",
+            
             MaxNumberOfReservations = 100
         };
         
-        var createEventResponse = await testsFixture.Client.PostAsJsonAsync("events/createEvent", createEventRequest);
+        var createEventResponse = await testsFixture.Client.PostAsJsonAsync("events/events", createEventRequest);
         var createEventResult = await createEventResponse.Content.ReadFromJsonAsync<CreateEventEndpoint.Response>();
         var eventId = createEventResult.Id;
         
             //UpdateEndpointRequest
         var updateEventRequest = new UpdateEventEndpoint.Request
         {
-            Id = eventId,
             NewTitle = "NewTitle",
             NewDescription = "NewDescription",
             NewStartDate = DateTime.Now.AddDays(2),
@@ -120,7 +106,7 @@ public class EventEndpointsTests(BoilerplateEndpointsTestsFixture testsFixture) 
         
         
         //Act
-        var updateEventResponse = await testsFixture.Client.PostAsJsonAsync("events/updateEvent", updateEventRequest);
+        var updateEventResponse = await testsFixture.Client.PutAsJsonAsync($"events/{eventId}", updateEventRequest);
         updateEventResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
     }
 
@@ -128,26 +114,8 @@ public class EventEndpointsTests(BoilerplateEndpointsTestsFixture testsFixture) 
     public async Task GetAllEventsEndpoints_ShouldReturnAllEvents()
     {
         //Arrange
-        var signUpRequest = new SignUpEndpoint.Request
-        {
-            Email = "email@t.pl",
-            Password = "12345678",
-            Username = "username"
-        };
-        
-        await testsFixture.Client.PostAsJsonAsync("users/sign-up", signUpRequest);
-        
-        var signInRequest = new SignInEndpoint.Request
-        {
-            Email = "email@t.pl",
-            Password = "12345678"
-        };
-        
-        var signInResponse = await testsFixture.Client.PostAsJsonAsync("users/sign-in", signInRequest);
-        var signInResult = await signInResponse.Content.ReadFromJsonAsync<SignInEndpoint.Response>();
-
-        testsFixture.Client.DefaultRequestHeaders.Authorization = 
-            new AuthenticationHeaderValue("Bearer", signInResult.Token);
+        testsFixture.Client.DefaultRequestHeaders.Authorization =
+            await GetAuthenticationHeaderFromNewUserAsync();
         
         var createEventRequest1 = new CreateEventEndpoint.Request
         {
@@ -169,24 +137,12 @@ public class EventEndpointsTests(BoilerplateEndpointsTestsFixture testsFixture) 
             MaxNumberOfReservations = 100
         };
         
-        var createEventRequest3 = new CreateEventEndpoint.Request
-        {
-            Title = "EventTitle3",
-            Description = "EventDescription3",
-            StartDate = DateTime.Now.AddDays(1),
-            EndDate = DateTime.Now.AddDays(3),
-            Location = "EventLocation3",
-            MaxNumberOfReservations = 100
-        };
-        
-        var createEventResponse1 = await testsFixture.Client.PostAsJsonAsync("events/createEvent", createEventRequest1);
+        var createEventResponse1 = await testsFixture.Client.PostAsJsonAsync("events/events", createEventRequest1);
         await createEventResponse1.Content.ReadFromJsonAsync<CreateEventEndpoint.Response>();
         
-        var createEventResponse2 = await testsFixture.Client.PostAsJsonAsync("events/createEvent", createEventRequest2);
+        var createEventResponse2 = await testsFixture.Client.PostAsJsonAsync("events/events", createEventRequest2);
         await createEventResponse2.Content.ReadFromJsonAsync<CreateEventEndpoint.Response>();
         
-        var createEventResponse3 = await testsFixture.Client.PostAsJsonAsync("events/createEvent", createEventRequest3);
-        await createEventResponse3.Content.ReadFromJsonAsync<CreateEventEndpoint.Response>();
         
         //Act
         var getEventsResponse = await testsFixture.Client.GetAsync("events/");

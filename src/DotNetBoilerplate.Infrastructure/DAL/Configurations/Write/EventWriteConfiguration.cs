@@ -17,23 +17,16 @@ internal sealed class EventWriteConfiguration : IEntityTypeConfiguration<Event>
         
         builder.Property(e => e.OrganizerId).HasConversion(e => e.Value, e => new UserId(e));
         
-        builder.HasIndex(e => e.Title);
         builder.Property(e => e.Title).HasConversion(e => e.Value, e => new EventTitle(e));
-
-        builder.HasIndex(e => e.Description);
+        
         builder.Property(e => e.Description).HasConversion(e => e.Value, e => new EventDescription(e));
         
-        builder.HasIndex(e => e.StartDate);
         builder.Property(e => e.StartDate).HasConversion(e => e.Value, e => new EventStartDate());
-
-
-        builder.HasIndex(e => e.EndDate);
+        
         builder.Property(e => e.EndDate).HasConversion(e => e.Value, e => new EventEndDate(e));
         
-        builder.HasIndex(e => e.Location);
         builder.Property(e => e.Location).HasConversion(e => e.Value, e => new EventLocation(e));
-
-        builder.HasIndex(e => e.MaxNumberOfReservations);
+        
         builder.Property(e => e.MaxNumberOfReservations).HasConversion(e => e.Value, e => new EventMaxNumberOfReservations(e));
 
         builder.OwnsMany(e => e.Reservations, reservationBuilder =>
