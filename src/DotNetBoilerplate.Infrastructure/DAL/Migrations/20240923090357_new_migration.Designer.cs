@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotNetBoilerplate.Infrastructure.DAL.Migrations
 {
     [DbContext(typeof(DotNetBoilerplateWriteDbContext))]
-    [Migration("20240918115058_EventDbMigration")]
-    partial class EventDbMigration
+    [Migration("20240923090357_new_migration")]
+    partial class new_migration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,19 +57,7 @@ namespace DotNetBoilerplate.Infrastructure.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Description");
-
-                    b.HasIndex("EndDate");
-
-                    b.HasIndex("Location");
-
-                    b.HasIndex("MaxNumberOfReservations");
-
                     b.HasIndex("OrganizerId");
-
-                    b.HasIndex("StartDate");
-
-                    b.HasIndex("Title");
 
                     b.ToTable("Events", "dotNetBoilerplate");
                 });

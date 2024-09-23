@@ -10,7 +10,7 @@ public class CreateEventEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
     {
-        app.MapPost("events", Handle)
+        app.MapPost("/", Handle)
             .RequireAuthorization()
             .WithSummary("Creates a new event");
     }

@@ -64,11 +64,10 @@ public class EventEndpointsTests(BoilerplateEndpointsTestsFixture testsFixture) 
         };
         
         //Act
-        var createEventResponse = await testsFixture.Client.PostAsJsonAsync("events/events", createEventRequest);
+        var createEventResponse = await testsFixture.Client.PostAsJsonAsync("events/", createEventRequest);
         
         //Assert
         createEventResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
-
     }
 
     [Fact]
@@ -89,7 +88,7 @@ public class EventEndpointsTests(BoilerplateEndpointsTestsFixture testsFixture) 
             MaxNumberOfReservations = 100
         };
         
-        var createEventResponse = await testsFixture.Client.PostAsJsonAsync("events/events", createEventRequest);
+        var createEventResponse = await testsFixture.Client.PostAsJsonAsync("events/", createEventRequest);
         var createEventResult = await createEventResponse.Content.ReadFromJsonAsync<CreateEventEndpoint.Response>();
         var eventId = createEventResult.Id;
         
@@ -137,10 +136,10 @@ public class EventEndpointsTests(BoilerplateEndpointsTestsFixture testsFixture) 
             MaxNumberOfReservations = 100
         };
         
-        var createEventResponse1 = await testsFixture.Client.PostAsJsonAsync("events/events", createEventRequest1);
+        var createEventResponse1 = await testsFixture.Client.PostAsJsonAsync("events/", createEventRequest1);
         await createEventResponse1.Content.ReadFromJsonAsync<CreateEventEndpoint.Response>();
         
-        var createEventResponse2 = await testsFixture.Client.PostAsJsonAsync("events/events", createEventRequest2);
+        var createEventResponse2 = await testsFixture.Client.PostAsJsonAsync("events/", createEventRequest2);
         await createEventResponse2.Content.ReadFromJsonAsync<CreateEventEndpoint.Response>();
         
         

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DotNetBoilerplate.Infrastructure.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class EventDbMigration : Migration
+    public partial class new_migration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -91,46 +91,10 @@ namespace DotNetBoilerplate.Infrastructure.DAL.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Events_Description",
-                schema: "dotNetBoilerplate",
-                table: "Events",
-                column: "Description");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Events_EndDate",
-                schema: "dotNetBoilerplate",
-                table: "Events",
-                column: "EndDate");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Events_Location",
-                schema: "dotNetBoilerplate",
-                table: "Events",
-                column: "Location");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Events_MaxNumberOfReservations",
-                schema: "dotNetBoilerplate",
-                table: "Events",
-                column: "MaxNumberOfReservations");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Events_OrganizerId",
                 schema: "dotNetBoilerplate",
                 table: "Events",
                 column: "OrganizerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Events_StartDate",
-                schema: "dotNetBoilerplate",
-                table: "Events",
-                column: "StartDate");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Events_Title",
-                schema: "dotNetBoilerplate",
-                table: "Events",
-                column: "Title");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservation_EventId",
