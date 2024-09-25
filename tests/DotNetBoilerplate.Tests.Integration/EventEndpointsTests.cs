@@ -186,4 +186,20 @@ public class EventEndpointsTests(BoilerplateEndpointsTestsFixture testsFixture) 
         eventInfoResponse.Title.ShouldBe(createEventRequest.Title);
         eventInfoResponse.Description.ShouldBe(createEventRequest.Description);
     }
+
+    [Fact]
+    public async Task GivenEventDoesNotExists_AndUserIsAuthorized_GetEventById_ShouldReturn404()
+    {
+        //Arrange
+        testsFixture.Client.DefaultRequestHeaders.Authorization =
+            await GetAuthenticationHeaderFromNewUserAsync();
+        
+        var eventId = Guid.NewGuid();
+
+        //Act
+        var getEventByIdResponse = await testsFixture.Client.GetAsync($"events/{eventId}");
+        
+        //Assert
+        getEventByIdResponse.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+    }
 }

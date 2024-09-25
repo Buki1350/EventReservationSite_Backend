@@ -10,9 +10,9 @@ namespace DotNetBoilerplate.Infrastructure.DAL.Handlers.Events;
 internal sealed class GetEventByIdHandler(
     DotNetBoilerplateReadDbContext dbContext
     )
-: IQueryHandler<GetEventByIdQuery, GetEventByIdResponse>
+: IQueryHandler<GetEventByIdQuery, GetEventByIdResponse?>
 {
-    public async Task<GetEventByIdResponse> HandleAsync(GetEventByIdQuery query)
+    public async Task<GetEventByIdResponse?> HandleAsync(GetEventByIdQuery query)
     {
         var @event = await dbContext.Events
             .AsNoTracking()
@@ -20,6 +20,8 @@ internal sealed class GetEventByIdHandler(
             .Select(e => new GetEventByIdResponse(e.Title, e.Description))
             .FirstOrDefaultAsync();
         
-        return new GetEventByIdResponse(@event.Title, @event.Description);
+        return @event is not null ?
+            new GetEventByIdResponse(@event.Title, @event.Description) :
+            null;
     }
 }
