@@ -180,7 +180,7 @@ public class EventEndpointsTests(BoilerplateEndpointsTestsFixture testsFixture) 
         //Assert
         getEventByIdResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
         
-        var eventInfoResponse = await getEventByIdResponse.Content.ReadFromJsonAsync<EventInfoResponse>();
+        var eventInfoResponse = await getEventByIdResponse.Content.ReadFromJsonAsync<GetEventByIdResponse>();
         
         eventInfoResponse.ShouldNotBeNull();
         eventInfoResponse.Title.ShouldBe(createEventRequest.Title);

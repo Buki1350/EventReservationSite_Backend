@@ -15,13 +15,13 @@ public class GetEventByIdEndpoint : IEndpoint
             .WithSummary("Returns the event");
     }
 
-    private static async Task<Results<Ok<EventInfoResponse>, NotFound>> Handle(
+    private static async Task<Results<Ok<GetEventByIdResponse>, NotFound>> Handle(
         [FromServices] IQueryDispatcher queryDispatcher,
         [FromRoute] Guid eventId,
         CancellationToken ct
     )
     {
-        var query = new GetEventByIdQuery{EventId = eventId};
+        var query = new GetEventByIdQuery(eventId);
         var result = await queryDispatcher.QueryAsync(query, ct);
         
         if (result is null) return TypedResults.NotFound();
