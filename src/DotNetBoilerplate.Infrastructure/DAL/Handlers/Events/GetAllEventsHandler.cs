@@ -10,20 +10,15 @@ namespace DotNetBoilerplate.Infrastructure.DAL.Handlers.Events;
 internal sealed class GetAllEventsHandler(
     DotNetBoilerplateReadDbContext dbContext
 )
-    : IQueryHandler<GetAllEventsQuery, EventsInfoResponse>
+    : IQueryHandler<GetAllEventsQuery, GetAllEventsResponse>
 {
-    public async Task<EventsInfoResponse> HandleAsync(GetAllEventsQuery query)
+    public async Task<GetAllEventsResponse> HandleAsync(GetAllEventsQuery query)
     {
         var events = await dbContext.Events
             .AsNoTracking() 
-            .Select(e => new EventDto
-                {
-                    Id = e.Id,
-                    Title = e.Title,
-                }
-            )
+            .Select(e => new EventDto(e.Id, e.Title))
             .ToListAsync(); 
         
-        return new EventsInfoResponse(events);
+        return new GetAllEventsResponse(events);
     }
 }

@@ -16,9 +16,11 @@ internal sealed class GetEventByIdHandler(
     {
         var @event = await dbContext.Events
             .AsNoTracking()
-            .FirstOrDefaultAsync(e => e.Id == query.EventId);
+            .Where(e => e.Id == query.EventId)
+            .Select(e => new EventInfoResponse{Title = e.Title, Description = e.Description})
+            .FirstOrDefaultAsync();
         
-        //If not null
+        //.FirstOrDefaultAsync(e => e.Id == query.EventId);
         return new EventInfoResponse {Title = @event.Title, Description = @event.Description};
     }
 }

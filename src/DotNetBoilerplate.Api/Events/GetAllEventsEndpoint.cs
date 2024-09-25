@@ -15,7 +15,7 @@ public class GetAllEventsEndpoint : IEndpoint
             .WithSummary("Returns all the events");
     }
 
-    private static async Task<Ok<EventsInfoResponse>> Handle(
+    private static async Task<Ok<GetAllEventsResponse>> Handle(
         [FromServices] IQueryDispatcher queryDispatcher,
         CancellationToken ct
     )

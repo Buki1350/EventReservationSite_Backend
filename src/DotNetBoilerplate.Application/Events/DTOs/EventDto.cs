@@ -2,16 +2,7 @@
 
 namespace DotNetBoilerplate.Application.Events.DTOs;
 
-public record EventDto
+public record EventDto(Guid Id, string Title)
 {
-    public EventDto(Event @event)
-    {
-        Id = @event.Id;
-        Title = @event.Title;
-    }
-    
-    public EventDto() { }
-
-    public Guid Id { get; init; }
-    public string Title { get; init; }
+    public EventDto(Event @event) : this(@event.Id, @event.Title) { }
 }
