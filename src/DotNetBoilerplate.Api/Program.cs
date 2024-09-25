@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using DotNetBoilerplate.Api.Events;
+using DotNetBoilerplate.Api.Reservations;
 using DotNetBoilerplate.Api.Users;
 using DotNetBoilerplate.Application;
 using DotNetBoilerplate.Application.Events;
@@ -21,6 +22,7 @@ var app = builder.Build();
 
 app.MapUsersEndpoints();
 app.MapEventsEndpoints();
+app.MapReservationsEndpoints();
 
 app.UseInfrastructure();
 

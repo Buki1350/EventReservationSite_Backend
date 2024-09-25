@@ -9,8 +9,8 @@ public sealed class Reservation
     public Reservation(){}
 
     public static Reservation Create(
-        UserId userId,
         EventId eventId,
+        UserId userId,
         DateTime now
     )
     {
@@ -36,7 +36,7 @@ public sealed class Reservation
     public UserId UserId { get; private set; }
     public EventId EventId { get; private set; }
     public DateTime CreatedAt { get; private set; }
-    public ReservationPaid Paid { get; private set; }
+    public ReservationPaid Paid { get; private set; } = false;
     public bool Active { get; private set; }
     
     

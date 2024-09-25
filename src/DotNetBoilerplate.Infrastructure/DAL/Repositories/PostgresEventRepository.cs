@@ -1,5 +1,7 @@
 ﻿using DotNetBoilerplate.Core.Events;
+using DotNetBoilerplate.Core.Reservations;
 using DotNetBoilerplate.Infrastructure.DAL.Contexts;
+using DotNetBoilerplate.Shared.Abstractions.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotNetBoilerplate.Infrastructure.DAL.Repositories;
@@ -15,7 +17,9 @@ internal sealed class PostgresEventRepository : IEventRepository
 
     public async Task<Event?> FindByIdAsync(EventId id)
     {
-        return await _events.SingleOrDefaultAsync(e => e.Id == id);
+        return await _events
+            .Include(x => x.Reservations)
+            .SingleOrDefaultAsync(e => e.Id == id);
     }
 
     public async Task AddAsync(Event @event)
@@ -31,6 +35,8 @@ internal sealed class PostgresEventRepository : IEventRepository
 
     public async Task<List<Event>> GetAllAsync()
     {
-        return await _events.ToListAsync();
+        return await _events
+            .Include(x => x.Reservations)
+            .ToListAsync();
     }
 }

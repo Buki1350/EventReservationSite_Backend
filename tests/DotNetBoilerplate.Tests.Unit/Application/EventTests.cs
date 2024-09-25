@@ -3,6 +3,7 @@ using Xunit;
 using System;
 using System.Threading.Tasks;
 using DotNetBoilerplate.Application.Events.UpdateEvent;
+using DotNetBoilerplate.Application.Exceptions;
 using DotNetBoilerplate.Core.Events;
 using DotNetBoilerplate.Core.Users;
 using DotNetBoilerplate.Shared.Abstractions.Contexts;

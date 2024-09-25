@@ -116,12 +116,12 @@ namespace DotNetBoilerplate.Tests.Unit.Core
             // Arrange
             var startDate = DateTime.Now.AddDays(-1);
             var endDate = DateTime.Now.AddDays(1);
-            var now = DateTime.Now.AddDays(-2);
-            var @event = MakeNewEvent(startDate, endDate, now);
+            var eventNow = DateTime.Now.AddDays(-2);
+            var @event = MakeNewEvent(startDate, endDate, eventNow);
 
             // Act & Assert
             var exception = Assert.Throws<TooLateReservationTimeException>(() =>
-                @event.MakeReservation(new DotNetBoilerplate.Core.Users.UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now));
+                @event.MakeReservation(Reservation.Create(@event.Id, Guid.NewGuid(), DateTime.Now)));
 
             Assert.Equal("Reservation cannot be done after event started.", exception.Message);
         }
@@ -136,12 +136,12 @@ namespace DotNetBoilerplate.Tests.Unit.Core
             const int maxNumberOfReservations = 2;
             var @event = MakeNewEvent(startDate, endDate, now, maxNumberOfReservations);
 
-            @event.MakeReservation(new DotNetBoilerplate.Core.Users.UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now);
-            @event.MakeReservation(new DotNetBoilerplate.Core.Users.UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now);
+            @event.MakeReservation(Reservation.Create(@event.Id, Guid.NewGuid(), now));
+            @event.MakeReservation(Reservation.Create(@event.Id, Guid.NewGuid(), now));
 
             // Act & Assert
             var exception = Assert.Throws<InvalidNumberOfReservationsException>(() =>
-                @event.MakeReservation(new DotNetBoilerplate.Core.Users.UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now));
+                @event.MakeReservation(Reservation.Create(@event.Id, Guid.NewGuid(), now)));
 
             Assert.Equal($"Too many reservations - cannot be more than {maxNumberOfReservations}.", exception.Message);
         }
