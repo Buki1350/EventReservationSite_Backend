@@ -22,7 +22,7 @@ internal sealed class CreateEventHandler : ICommandHandler<CreateEventCommand>
     {
         var startDate = new EventStartDate(command.StartDate, _clock.Now());
         
-        var @event = Event.Create(command.Id, _context.Identity.Id, command.Title, command.Title, startDate, command.EndDate, command.Location, command.MaxNumberOfReservations);
+        var @event = Event.Create(command.Id, _context.Identity.Id, command.Title, command.Description, startDate, command.EndDate, command.Location, command.MaxNumberOfReservations);
         
         await _eventRepository.AddAsync(@event);
     }

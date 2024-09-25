@@ -4,6 +4,7 @@ using DotNetBoilerplate.Shared.Abstractions.Contexts;
 using DotNetBoilerplate.Shared.Abstractions.Queries;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotNetBoilerplate.Api.Users;
 

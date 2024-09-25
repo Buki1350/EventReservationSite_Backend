@@ -6,22 +6,25 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DotNetBoilerplate.Api.Events;
 
-public class GetAllEventsEndpoint : IEndpoint
+public class GetEventByIdEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
     {
-        app.MapGet("", Handle)
+        app.MapGet("/{eventId:guid}", Handle)
             .RequireAuthorization()
-            .WithSummary("Returns all the events");
+            .WithSummary("Returns the event");
     }
 
-    private static async Task<Ok<GetAllEventsResponse>> Handle(
+    private static async Task<Results<Ok<GetEventByIdResponse>, NotFound>> Handle(
         [FromServices] IQueryDispatcher queryDispatcher,
+        [FromRoute] Guid eventId,
         CancellationToken ct
     )
     {
-        var query = new GetAllEventsQuery();
+        var query = new GetEventByIdQuery(eventId);
         var result = await queryDispatcher.QueryAsync(query, ct);
+        
+        if (result is null) return TypedResults.NotFound();
         return TypedResults.Ok(result);
     }
 }

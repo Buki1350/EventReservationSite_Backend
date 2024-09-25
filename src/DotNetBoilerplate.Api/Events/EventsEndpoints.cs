@@ -13,6 +13,7 @@ internal static class EventsEndpoints
         group
             .MapEndpoint<CreateEventEndpoint>()
             .MapEndpoint<UpdateEventEndpoint>()
-            .MapEndpoint<GetAllEventsEndpoint>();
+            .MapEndpoint<GetAllEventsEndpoint>()
+            .MapEndpoint<GetEventByIdEndpoint>();
     }
 }

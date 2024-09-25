@@ -1,4 +1,5 @@
-﻿using DotNetBoilerplate.Infrastructure.Auth;
+﻿using System.Runtime.CompilerServices;
+using DotNetBoilerplate.Infrastructure.Auth;
 using DotNetBoilerplate.Infrastructure.BackgroundJobs;
 using DotNetBoilerplate.Infrastructure.DAL;
 using DotNetBoilerplate.Infrastructure.Emails;
@@ -10,6 +11,7 @@ using DotNetBoilerplate.Shared.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+[assembly: InternalsVisibleTo("DotNetBoilerplate.Application")]
 
 namespace DotNetBoilerplate.Infrastructure;
 

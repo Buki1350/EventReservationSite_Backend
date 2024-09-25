@@ -33,11 +33,11 @@ public class CreateEventEndpoint : IEndpoint
         
         await commandDispatcher.DispatchAsync(command, ct);
 
-        return TypedResults.Ok(new Response(command.Id));
+        return TypedResults.Ok(new Response(command.Id, command.Title, command.Description));
     }
 
 
-    internal sealed record Response(Guid Id);
+    internal sealed record Response(Guid Id, string Title, string Description);
     public sealed class Request
     {
         [Required] public string Title { get; init; }
