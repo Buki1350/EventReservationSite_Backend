@@ -12,6 +12,8 @@ internal sealed class DotNetBoilerplateReadDbContext(DbContextOptions<DotNetBoil
 {
     public DbSet<UserReadModel> Users { get; set; }
     public DbSet<EventReadModel> Events { get; set; }
+    
+    public DbSet<ReservationReadModel> Reservations { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,5 +23,6 @@ internal sealed class DotNetBoilerplateReadDbContext(DbContextOptions<DotNetBoil
 
         modelBuilder.ApplyConfiguration(new UserReadConfiguration());
         modelBuilder.ApplyConfiguration(new EventReadConfiguration());
+        modelBuilder.ApplyConfiguration(new ReservationReadConfiguration());
     }
 }

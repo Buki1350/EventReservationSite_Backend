@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using DotNetBoilerplate.Application.Exceptions;
 using DotNetBoilerplate.Application.Reservations.CreateReservation;
 using DotNetBoilerplate.Shared.Abstractions.Commands;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -15,7 +16,7 @@ public class CreateReservationEndpoint : IEndpoint
             .WithSummary("Creates new reservation");
     }
 
-    private static async Task<Ok<Response>> Handle(
+    private static async Task<Results<Ok<Response>, NotFound>> Handle(
         [FromRoute] Guid eventId,
         [FromServices] ICommandDispatcher commandDispatcher,
         CancellationToken ct
@@ -25,9 +26,18 @@ public class CreateReservationEndpoint : IEndpoint
             eventId
             );
 
-        await commandDispatcher.DispatchAsync(command, ct);
+
+
+        try
+        {
+            await commandDispatcher.DispatchAsync(command, ct);
+            return TypedResults.Ok(new Response(command.EventId));
+        }
+        catch (EventNotFoundException)
+        {
+            return TypedResults.NotFound();
+        }
         
-        return TypedResults.Ok(new Response(command.EventId));
     }
     
     internal sealed record Response(Guid EventId);

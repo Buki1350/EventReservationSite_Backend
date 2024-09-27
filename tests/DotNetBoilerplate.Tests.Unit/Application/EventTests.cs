@@ -13,15 +13,13 @@ public class EventTests
 {
     private readonly IEventRepository _eventRepository;
     private readonly IContext _context;
-    private readonly IClock _clock;
     private readonly UpdateEventHandler _updateEventHandler;
 
     public EventTests()
     {
         _eventRepository = Substitute.For<IEventRepository>();
         _context = Substitute.For<IContext>();
-        _clock = Substitute.For<IClock>();
-        _updateEventHandler = new UpdateEventHandler(_eventRepository, _clock, _context);
+        _updateEventHandler = new UpdateEventHandler(_eventRepository, _context);
     }
 
     [Fact]
@@ -58,10 +56,10 @@ public class EventTests
         var organizerId = Guid.NewGuid();
         var eventId = new EventId(Guid.NewGuid());
         var command = new UpdateEventCommand(eventId, "SomeTitle", "SomeDescription", DateTime.Now.AddDays(1), DateTime.Now.AddDays(2), "SomeLocation", 10);
-        var existingEvent = Event.Create(eventId, organizerId, "SomeTitle", "SomeDescription", new EventStartDate(DateTime.Now.AddDays(1), _clock.Now()), DateTime.Now.AddDays(2), "SomeLocation", 10);
+        var existingEvent = Event.Create(eventId, organizerId, "SomeTitle", "SomeDescription", new EventStartDate(DateTime.Now.AddDays(1)), DateTime.Now.AddDays(2), "SomeLocation", 10);
 
         _eventRepository.FindByIdAsync(eventId).Returns(Task.FromResult(existingEvent));
-        _context.Identity.Id.Returns(Guid.NewGuid()); // Simulating different user
+        _context.Identity.Id.Returns(Guid.NewGuid());
 
         // Act & Assert
         await Assert.ThrowsAsync<WrongUserIdentityException>(() => _updateEventHandler.HandleAsync(command));
@@ -79,11 +77,10 @@ public class EventTests
 
         var command = new UpdateEventCommand(eventId, "Updated Title", "Updated Description", startDate, endDate, "Updated Location", 20);
 
-        var existingEvent = Event.Create(eventId, organizerId, "Original Title", "Original Description", new EventStartDate(now.AddDays(3), _clock.Now()), now.AddDays(4), "Original Location", 10);
+        var existingEvent = Event.Create(eventId, organizerId, "Original Title", "Original Description", new EventStartDate(now.AddDays(3)), now.AddDays(4), "Original Location", 10);
 
         _eventRepository.FindByIdAsync(eventId).Returns(Task.FromResult(existingEvent));
         _context.Identity.Id.Returns(organizerId);
-        _clock.Now().Returns(now);
 
         // Act
         await _updateEventHandler.HandleAsync(command);

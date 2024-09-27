@@ -8,8 +8,9 @@ public sealed record EventStartDate
     public EventStartDate() {}
     public EventStartDate(DateTime value)
     {
+        DateTime earliestStartDate = DateTime.Now.AddHours(EventSpareTime);
         // start at least 12 hours in advance
-        if (value <= DateTime.Now.AddHours(EventSpareTime)) throw new InvalidEventStartDateException(value);
+        if (value <= earliestStartDate) throw new InvalidEventStartDateException(value);
         
         Value = value;
     }
