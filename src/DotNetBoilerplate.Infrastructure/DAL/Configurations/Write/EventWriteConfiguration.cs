@@ -21,7 +21,7 @@ internal sealed class EventWriteConfiguration : IEntityTypeConfiguration<Event>
         
         builder.Property(e => e.Description).HasConversion(e => e.Value, e => new EventDescription(e));
         
-        builder.Property(e => e.StartDate).HasConversion(e => e.Value, e => new EventStartDate());
+        builder.Property(e => e.StartDate).HasConversion(e => e.Value, e => new EventStartDate(e));
         
         builder.Property(e => e.EndDate).HasConversion(e => e.Value, e => new EventEndDate(e));
         
@@ -48,5 +48,7 @@ internal sealed class EventWriteConfiguration : IEntityTypeConfiguration<Event>
 
         builder.HasOne<User>().WithMany().HasForeignKey(e => e.OrganizerId);
 
+        builder.Metadata.FindNavigation(nameof(Event.Reservations))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

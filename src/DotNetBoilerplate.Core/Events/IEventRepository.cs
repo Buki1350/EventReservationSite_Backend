@@ -1,4 +1,6 @@
-﻿namespace DotNetBoilerplate.Core.Events;
+﻿using DotNetBoilerplate.Core.Reservations;
+
+namespace DotNetBoilerplate.Core.Events;
 
 public interface IEventRepository
 {

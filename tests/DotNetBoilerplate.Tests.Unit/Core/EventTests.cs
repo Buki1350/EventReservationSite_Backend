@@ -7,14 +7,14 @@ namespace DotNetBoilerplate.Tests.Unit.Core
 {
     public class EventTests
     {
-        Event MakeNewEvent(DateTime startTime, DateTime endTime, DateTime now, int maxNumberOfTickets = 100)
+        Event MakeNewEvent(DateTime startTime, DateTime endTime, int maxNumberOfTickets = 100)
         {
             return Event.Create(
                 new EventId(Guid.NewGuid()),
                 new UserId(Guid.NewGuid()),
                 new EventTitle("Test Event"),
                 new EventDescription("This is a test event description."),
-                new EventStartDate(startTime, now),
+                new EventStartDate(startTime),
                 new EventEndDate(endTime),
                 new EventLocation("Test Location"),
                 new EventMaxNumberOfReservations(maxNumberOfTickets)
@@ -29,7 +29,7 @@ namespace DotNetBoilerplate.Tests.Unit.Core
             var organizerId = new UserId(Guid.NewGuid());
             var title = new EventTitle("Test Event");
             var description = new EventDescription("This is a test event description.");
-            var startDate = new EventStartDate(DateTime.Now.AddDays(1), DateTime.Now);
+            var startDate = new EventStartDate(DateTime.Now.AddDays(1));
             var endDate = new EventEndDate(DateTime.Now.AddDays(2));
             var location = new EventLocation("Test Location");
             var maxNumberOfTickets = new EventMaxNumberOfReservations(100);
@@ -56,7 +56,7 @@ namespace DotNetBoilerplate.Tests.Unit.Core
             var organizerId = new UserId(Guid.NewGuid());
             var title = new EventTitle("Test Event");
             var description = new EventDescription("This is a test event description.");
-            var startDate = new EventStartDate(DateTime.Now.AddDays(2), DateTime.Now);
+            var startDate = new EventStartDate(DateTime.Now.AddDays(2));
             var endDate = new EventEndDate(DateTime.Now.AddDays(1));
             var location = new EventLocation("Test Location");
             var maxNumberOfTickets = new EventMaxNumberOfReservations(100);
@@ -76,7 +76,7 @@ namespace DotNetBoilerplate.Tests.Unit.Core
             
             // Act & Assert
             var exception = Assert.Throws<InvalidEventStartDateException>(() =>
-                new EventStartDate(startDate, DateTime.Now));
+                new EventStartDate(startDate));
             
             Assert.Equal($"Incorrect event starting date ({startDate}). Date has to be at least {EventStartDate.EventSpareTime} hours in advance.", exception.Message);
         }
@@ -114,14 +114,14 @@ namespace DotNetBoilerplate.Tests.Unit.Core
         public void MakeReservation_ShouldThrowTooLateReservationException_WhenGivenDateIsLaterThanStartDate()
         {
             // Arrange
-            var startDate = DateTime.Now.AddDays(-1);
-            var endDate = DateTime.Now.AddDays(1);
-            var now = DateTime.Now.AddDays(-2);
-            var @event = MakeNewEvent(startDate, endDate, now);
+            var startDate = DateTime.Now.AddDays(1);
+            var endDate = DateTime.Now.AddDays(2);
+            var reservationDate = DateTime.Now.AddDays(1);
+            var @event = MakeNewEvent(startDate, endDate);
 
             // Act & Assert
             var exception = Assert.Throws<TooLateReservationTimeException>(() =>
-                @event.MakeReservation(new DotNetBoilerplate.Core.Users.UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now));
+                @event.MakeReservation(Reservation.Create(@event.Id, Guid.NewGuid(), reservationDate)));
 
             Assert.Equal("Reservation cannot be done after event started.", exception.Message);
         }
@@ -134,14 +134,14 @@ namespace DotNetBoilerplate.Tests.Unit.Core
             var endDate = DateTime.Now.AddDays(2);
             var now = DateTime.Now;
             const int maxNumberOfReservations = 2;
-            var @event = MakeNewEvent(startDate, endDate, now, maxNumberOfReservations);
+            var @event = MakeNewEvent(startDate, endDate, maxNumberOfReservations);
 
-            @event.MakeReservation(new DotNetBoilerplate.Core.Users.UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now);
-            @event.MakeReservation(new DotNetBoilerplate.Core.Users.UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now);
+            @event.MakeReservation(Reservation.Create(@event.Id, Guid.NewGuid(), now));
+            @event.MakeReservation(Reservation.Create(@event.Id, Guid.NewGuid(), now));
 
             // Act & Assert
             var exception = Assert.Throws<InvalidNumberOfReservationsException>(() =>
-                @event.MakeReservation(new DotNetBoilerplate.Core.Users.UserId(Guid.NewGuid()), new EventId(Guid.NewGuid()), DateTime.Now));
+                @event.MakeReservation(Reservation.Create(@event.Id, Guid.NewGuid(), now)));
 
             Assert.Equal($"Too many reservations - cannot be more than {maxNumberOfReservations}.", exception.Message);
         }
@@ -153,7 +153,7 @@ namespace DotNetBoilerplate.Tests.Unit.Core
             var startDate = DateTime.Now.AddDays(1);
             var endDate = DateTime.Now.AddDays(2);
             var now = DateTime.Now;
-            var @event = MakeNewEvent(startDate, endDate, now);
+            var @event = MakeNewEvent(startDate, endDate);
             var nonExistentReservationId = new ReservationId(Guid.NewGuid());
 
             // Act & Assert

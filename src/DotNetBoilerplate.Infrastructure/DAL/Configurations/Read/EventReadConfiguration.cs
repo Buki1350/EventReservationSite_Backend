@@ -15,6 +15,5 @@ internal sealed class EventReadConfiguration : IEntityTypeConfiguration<EventRea
         builder.HasOne(x => x.Organizer)
             .WithMany(x => x.OrganizedEvents)
             .HasForeignKey(x => x.OrganizerId);
-        
     }
 }

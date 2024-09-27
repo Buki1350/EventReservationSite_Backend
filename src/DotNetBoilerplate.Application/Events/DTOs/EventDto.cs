@@ -1,5 +1,5 @@
-﻿using DotNetBoilerplate.Core.Events;
-
+﻿using DotNetBoilerplate.Application.Reservations.DTOs;
+using DotNetBoilerplate.Core.Events;
 namespace DotNetBoilerplate.Application.Events.DTOs;
 
 public record EventDto(Guid Id, string Title)

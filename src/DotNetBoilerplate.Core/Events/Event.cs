@@ -48,10 +48,11 @@ public class Event : Entity
     public EventTitle Title { get; private set; }
     public EventDescription Description { get; private set; }
     public EventStartDate StartDate { get; private set; }
-    public EventEndDate EndDate { get; private set; }
+    public EventEndDate EndDate { get ; private set; }
     public EventLocation Location { get; private set; }
     public EventMaxNumberOfReservations MaxNumberOfReservations { get; private set; }
-    public readonly List<Reservation> Reservations = [];
+    private readonly List<Reservation> _reservations = [];
+    public IReadOnlyCollection<Reservation> Reservations => _reservations;
 
     public void Update(
         EventTitle newTitle,
@@ -70,20 +71,20 @@ public class Event : Entity
         MaxNumberOfReservations = newMaxNumberOfReservations;
     }
     
-    public void MakeReservation(Users.UserId userId, EventId eventId, DateTime now)
+    public void MakeReservation(Reservation reservation)
     {
-        if (now > StartDate.Value) throw new TooLateReservationTimeException();
-        if (Reservations.Count + 1 > MaxNumberOfReservations) throw new InvalidNumberOfReservationsException(MaxNumberOfReservations.Value);
+        if (reservation.CreatedAt > StartDate.Value) throw new TooLateReservationTimeException();
+        if (_reservations.Count + 1 > MaxNumberOfReservations) throw new InvalidNumberOfReservationsException(MaxNumberOfReservations.Value);
         
-        Reservations.Add(Reservation.Create(userId, eventId, now));
+        _reservations.Add(reservation);
     }
 
     public void CancelReservation(ReservationId reservationId)
     {
-        var reservation = Reservations.FirstOrDefault(r => r.Id == reservationId);
+        var reservation = _reservations.FirstOrDefault(r => r.Id == reservationId);
         
         if (reservation is null) throw new ReservationNotFoundException(reservationId.Value);
         
-        Reservations.Find(r => r.Id.Value == reservationId.Value).Cancel();
+        _reservations.Find(r => r.Id.Value == reservationId.Value).Cancel();
     }
 }

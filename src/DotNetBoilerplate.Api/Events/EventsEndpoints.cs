@@ -1,4 +1,6 @@
-﻿namespace DotNetBoilerplate.Api.Events;
+﻿using DotNetBoilerplate.Application.Events.Responses;
+
+namespace DotNetBoilerplate.Api.Events;
 
 internal static class EventsEndpoints
 {
@@ -14,6 +16,7 @@ internal static class EventsEndpoints
             .MapEndpoint<CreateEventEndpoint>()
             .MapEndpoint<UpdateEventEndpoint>()
             .MapEndpoint<GetAllEventsEndpoint>()
-            .MapEndpoint<GetEventByIdEndpoint>();
+            .MapEndpoint<GetEventByIdEndpoint>()
+            .MapEndpoint<GetAllEventsWithDetailsEndpoint>();
     }
 }
